@@ -1,0 +1,33 @@
+.weather-container {
+
+}
+
+.search-input {
+    background: transparent;
+    border: none;
+    padding: 4px;
+    outline: none;
+    width: 100%;
+}
+
+.weather-header div {
+    border-bottom: 2px solid black;
+    width: 80%;
+    margin: auto;
+    display: flex;
+}
+
+.weather-header button {
+border: none;
+background: transparent;
+color: #17A589;
+cursor: pointer;
+outline: none;
+}
+
+.weather-info i {
+    color: yellow;
+    position: relative;
+    top: 5px;
+    left: 5px;
+}
