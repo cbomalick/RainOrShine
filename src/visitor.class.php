@@ -19,8 +19,7 @@ class Visitor {
 
 		//Get weather
 		$config = parse_ini_file('src/config.ini');
-        $API_KEY = $config['api_key'];
-		//$url = 'api.openweathermap.org/data/2.5/weather?units=imperial&lat='.$this->latitude.'&lon='.$this->longitude.'&appid=' . $API_KEY;
+        $API_KEY = $config['weather_api_key'];
 		$url = 'https://api.openweathermap.org/data/2.5/onecall?units=imperial&lat='.$this->latitude.'&lon='.$this->longitude.'&exclude=minutely,hourly&appid=' . $API_KEY;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
@@ -35,6 +34,8 @@ class Visitor {
 		$this->tempMin = round($response['daily'][0]['temp']['min']);
 		$this->tempMax = round($response['daily'][0]['temp']['max']);
 		$this->humidity = $response['current']['humidity'];
+
+		Echo json_encode($this);
 
 		// Echo"<pre>";
 		// var_dump($response['daily'][0]['temp']['max']);

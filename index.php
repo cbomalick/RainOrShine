@@ -26,13 +26,16 @@ $visitor = new Visitor();
 				<div class="navigation">
 					<ul>
 						<li>
-							<a class="active" href="index.php">Post Your Weather</a>
+							<a class="active" href="index.php">Home</a>
 						</li>
 						<li>
-							<a href="index.php">Leaderboard</a>
+							<a href="?action=leaderboard">Leaderboard</a>
+						</li>
+						<li>
+							<a href="?action=about">About</a>
 						</li>
 						<li class="navright">
-							<a href="?p=login">Log In</a>
+							<a href="?action=login">Log In</a>
 						</li>
 					</ul>
 				</div>
@@ -77,7 +80,6 @@ $visitor = new Visitor();
 					</form>
 				</div>
 			</div>
-			<div class="footer"></div>
 		</div>
 	</body>
 </html>
