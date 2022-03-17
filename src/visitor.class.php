@@ -30,17 +30,10 @@ class Visitor {
 
 		$this->temp = round($response['current']['temp']);
 		$this->description = $response['current']['weather'][0]['main'];
-		$this->icon = 'http://openweathermap.org/img/wn/'.$response['current']['weather'][0]['icon'].'@2x.png';
+		$this->icon = $response['current']['weather'][0]['icon'];
 		$this->tempMin = round($response['daily'][0]['temp']['min']);
 		$this->tempMax = round($response['daily'][0]['temp']['max']);
 		$this->humidity = $response['current']['humidity'];
-
-		Echo json_encode($this);
-
-		// Echo"<pre>";
-		// var_dump($response['daily'][0]['temp']['max']);
-		// Echo"</pre><br><br>";
-
 	}
 }
 

@@ -18,6 +18,35 @@ $visitor = new Visitor();
 	<head>
 		<title>Rain or Shine</title>
 		<link href="css/style.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<? 
+		
+		Echo'<script type="text/javascript">
+		JSONTest = function() {
+			var resultDiv = $("#resultDivContainer");
+			$.ajax({
+				url: "https://scrillas.com/projects/api/api.php?action=post",
+				type: "POST",
+				data: JSON.stringify( { "city": "'.$visitor->city.'", "state": "'.$visitor->state.'", "temp": '.$visitor->temp.', "description": "'.$visitor->description.'", "icon": "'.$visitor->icon.'", "tempMin": '.$visitor->tempMin.', "tempMax": '.$visitor->tempMax.', "humidity": '.$visitor->humidity.'} ),
+				contentType: "application/json; charset=utf-8",
+				success: function (result) {
+					switch (result) {
+						case true:
+							processResponse(result);
+							break;
+						default:
+							resultDiv.html(result);
+					}
+				},
+				error: function (xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				}
+			});
+		};
+
+		</script>';
+		
+		?>
 	</head>
 	<body>
 		<div class="container">
@@ -46,7 +75,7 @@ $visitor = new Visitor();
 
 						Echo "<div class=\"box\">
 							<div class=\"metric\">
-								<p><img src=\"{$visitor->icon}\"/></p>
+								<p><img src=\"http://openweathermap.org/img/wn/{$visitor->icon}@2x.png\"/></p>
 							</div>
 							<div class=\"metric\">
 								<h4>{$visitor->city}, {$visitor->state}</h4>
@@ -74,9 +103,9 @@ $visitor = new Visitor();
 						<h2>Share</h2>
 						<p >Share your weather to compete with others from around the globe. Find out who is the true weather master!</p>
 						<p>
-							<input name="name" id="name" value="" placeholder="Your Name">
+							<div id="resultDivContainer"></div>
 						</p>
-						<button class="actionbutton request" type="submit" name="submit" id="submit">Post Weather To Leaderboard</button>
+						<button class="actionbutton request" type="button" onclick="JSONTest()" name="submit" id="submit">Post Weather To Leaderboard</button>
 					</form>
 				</div>
 			</div>
