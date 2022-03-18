@@ -6,23 +6,45 @@
             $this->connect  = Database::getInstance()->getConnection();
         }
 
-        public function get(){
-            $sql = "SELECT * FROM posts";
+        public function getPosts($limit){
+            $sql = "SELECT * FROM posts ORDER BY datetime DESC LIMIT ?";
             $stmt = $this->connect->prepare($sql);
+            $stmt->bindParam(1, $limit, PDO::PARAM_INT);
             $stmt->execute();
             $row = $stmt->fetchAll();
+            return $row;
+        }
 
-            if(count($row) > 0){
-                foreach($row as $row){
-                    Echo"Records";
-                }
-            } else {
-                Echo"No records";
+        public function printLast($count){
+            $posts = $this->getPosts($count);
+            foreach($posts as $post){
+                Echo"<div class=\"wrapper\" style=\"padding: 3px 0px 3px 0px;\">
+                <div class=\"box\">
+                   <div class=\"metric\">
+                      <p><img src=\"http://openweathermap.org/img/wn/".$post["icon"]."@2x.png\"/></p>
+                   </div>
+                   <div class=\"metric\">
+                      <h4>".$post["city"].", ".$post["state"]."</h4>
+                      <p>".date("g:ia F jS Y", strtotime($post['datetime']))."</p>
+                   </div>
+                   <div class=\"metric\">
+                      <h4>".$post["temp"]."°F and ".$post["description"]."</h4>
+                      <p>Weather</p>
+                   </div>
+                   <div class=\"metric\">
+                      <h4>".$post["high"]."°F / ".$post["low"]."°F</h4>
+                      <p>Daily High / Low</p>
+                   </div>
+                   <div class=\"metric\">
+                      <h4>".$post["humidity"]."%</h4>
+                      <p>Humidity</p>
+                   </div>
+                </div>
+             </div>";
             }
         }
 
         public function post($json){
-
             //Validation block
             $json = json_decode($json);
             // $config = parse_ini_file('src/config.ini');
@@ -40,7 +62,7 @@
             $this->ipAddress = $_SERVER['REMOTE_ADDR'];
 
             if($this->rateLimit($this->ipAddress)){
-                Echo"Error: Limit 1 Post Per Hour";
+                $alert = (new Alert())->errorAlert("Limit 1 Post Per Hour");
                 exit();
             }
 
@@ -54,13 +76,9 @@
             $this->tempMax = substr($json->tempMax ?? 0, 0, 4);
             $this->humidity = substr($json->humidity ?? 0, 0, 4);
 
-            // Echo"<pre>";
-            // var_dump($this);
-            // Echo"</pre><br><br>";
-
             if(empty($this->city) || empty($this->state) || empty($this->temp) || empty($this->description) || empty($this->icon) || 
                 empty($this->tempMin) || empty($this->tempMax) || empty($this->humidity)){
-                Echo "Error: Invalid Details";
+                $alert = (new Alert())->errorAlert("Invalid Details");
                 exit();
             }
 
@@ -73,7 +91,7 @@
             $stmt->execute([$this->ipAddress, $this->timestamp, $this->city, $this->state, $this->temp, 
             $this->description, $this->tempMax, $this->tempMin, $this->humidity, $this->icon]);
         
-            Echo "Added Successfully!";
+            $alert = (new Alert())->successAlert("Successfully saved to the leaderboard!");
         }
 
         private function rateLimit($ip){
